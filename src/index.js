@@ -1,6 +1,8 @@
 import { getUser } from './searchPictures';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+// all modules
+import Notiflix from 'notiflix';
 // getUser('cat');
 const formElem = document.querySelector('.search-form');
 
@@ -13,21 +15,19 @@ function onSearch(e) {
   const valueInput = document.querySelector("[type='text']").value;
   if (valueInput === '') {
     elemDiv.innerHTML = '';
+
     return;
   }
   getUser(valueInput).then(data => {
-    // console.log(getUser(valueInput));
-    elemDiv.innerHTML = galleryMarkup(data);
+    console.log(data);
+    elemDiv.insertAdjacentHTML('afterbegin', markupPictures(data));
     let gallery = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
       captionDelay: 250,
     });
-    // console.log(galleryMarkup(data));
   });
 }
-// function markupPictures() {}
 
-function galleryMarkup(search) {
+function markupPictures(search) {
   return search
     .map(
       ({
@@ -45,16 +45,16 @@ function galleryMarkup(search) {
       </a>
       <div class="info">
         <p class="info-item">
-          <b> likes ${likes}</b>
+          <b> Likes </b><span>${likes}</span>
         </p>
         <p class="info-item">
-          <b> views ${views}</b>
+          <b> Views </b><span>${views}</span>
         </p>
         <p class="info-item">
-          <b> comments ${comments}</b>
+          <b> Comments </b><span>${comments}</span>
         </p>
         <p class="info-item">
-          <b> downloads ${downloads}</b>
+          <b> Downloads </b><span>${downloads}</span>
         </p>
       </div>
       
@@ -63,14 +63,3 @@ function galleryMarkup(search) {
     )
     .join('');
 }
-// const createGallery = galleryMarkup(galleryItems);
-// console.log(galleryItems);
-// elemDiv.insertAdjacentHTML('beforeend', createGallery);
-
-// webformatURL - посилання на маленьке зображення для списку карток.
-// largeImageURL - посилання на велике зображення.
-// tags - рядок з описом зображення. Підійде для атрибуту alt.
-// likes - кількість лайків.
-// views - кількість переглядів.
-// comments - кількість коментарів.
-// downloads - кількість завантажень.
