@@ -85,7 +85,7 @@ font-size: 15px;
 .info-item{
   display: grid;
 }
-span, b {
+.info-image {
   display: flex;
   justify-content: space-around;
 }
@@ -105,4 +105,24 @@ span, b {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+.sl-counter{
+    display: flex;
+}
+.load-more{
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 24px; /* Some padding */
+    font-size: 16px; /* Set a font-size */
+}
+
+/* Add a right margin to each icon */
+.fa {
+ 
+    margin-left: 0;
+    margin-right: -15px;
+}
+button{
+    cursor: pointer;
 }
