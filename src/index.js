@@ -1,26 +1,32 @@
-import { getUser } from './searchPictures';
+// import { getUser } from './searchPictures';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-// all modules
 import Notiflix from 'notiflix';
-// getUser('cat');
-const formElem = document.querySelector('.search-form');
+const axios = require('axios').default;
 
+const formElem = document.querySelector('.search-form');
 const elemDiv = document.querySelector('.gallery');
-// console.log(valueInput);
+const KEY_PIXABAY = '29991996-b215bbe81df8b02481f14f1cd';
+const loadMore = document.querySelector('.load-more');
+loadMore.addEventListener('click', onLoadMore);
+let page = 1;
+let valueInput = '';
 
 formElem.addEventListener('submit', onSearch);
 function onSearch(e) {
   e.preventDefault();
-  const valueInput = document.querySelector("[type='text']").value;
+  page = 1;
+  valueInput = document.querySelector("[type='text']").value;
   if (valueInput === '') {
     elemDiv.innerHTML = '';
-
+    Notiflix.Notify.info('Please enter a search images');
     return;
   }
   getUser(valueInput).then(data => {
-    console.log(data);
-    elemDiv.insertAdjacentHTML('afterbegin', markupPictures(data));
+    // console.log(data);
+    elemDiv.innerHTML = '';
+    elemDiv.insertAdjacentHTML('beforeend', markupPictures(data));
+
     let gallery = new SimpleLightbox('.gallery a', {
       captionDelay: 250,
     });
@@ -62,4 +68,47 @@ function markupPictures(search) {
       }
     )
     .join('');
+  lightBox.refresh();
+}
+// const { height: cardHeight } = document
+//   .querySelector('.gallery')
+//   .firstElementChild.getBoundingClientRect();
+
+// window.scrollBy({
+//   top: cardHeight * 2,
+//   behavior: 'smooth',
+// });
+
+function onLoadMore(e) {
+  page += 1;
+  getUser(valueInput).then(data => {
+    // console.log(data);
+    elemDiv.insertAdjacentHTML('beforeend', markupPictures(data));
+    let gallery = new SimpleLightbox('.gallery a', {
+      captionDelay: 250,
+    });
+  });
+}
+async function getUser(name) {
+  try {
+    const response = await axios.get(
+      `https://pixabay.com/api/?key=${KEY_PIXABAY}&q=${name}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
+    );
+    // console.log(response);
+    if (!response.data.totalHits) {
+      loadMore.classList.add('visually-hidden');
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    } else if (response.data.totalHits) {
+      loadMore.classList.remove('visually-hidden');
+      Notiflix.Notify.success(
+        `Hooray! We found ${response.data.totalHits} images.`
+      );
+    }
+    console.log(response.data);
+    return response.data.hits;
+  } catch (error) {
+    console.error(error);
+  }
 }
