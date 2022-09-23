@@ -1,4 +1,3 @@
-// import { getUser } from './searchPictures';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
@@ -9,6 +8,7 @@ const elemDiv = document.querySelector('.gallery');
 const KEY_PIXABAY = '29991996-b215bbe81df8b02481f14f1cd';
 const loadMore = document.querySelector('.load-more');
 const iElem = document.querySelector('.fa');
+const endElemDiv = document.querySelector('.more');
 loadMore.addEventListener('click', onLoadMore);
 let page = 1;
 let valueInput = '';
@@ -25,15 +25,13 @@ function onSearch(e) {
   valueInput = document.querySelector("[type='text']").value;
   if (valueInput === '') {
     elemDiv.innerHTML = '';
+    loadMore.classList.add('visually-hidden');
     Notiflix.Notify.info('Please enter a search images');
     return;
   }
   getUser(valueInput).then(data => {
-    // console.log(data);
-
     elemDiv.innerHTML = '';
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(data));
-
     let gallery = new SimpleLightbox('.gallery a', {
       captionDelay: 250,
     });
@@ -76,20 +74,17 @@ function markupPictures(search) {
     )
     .join('');
 }
-// const { height: cardHeight } = document
-//   .querySelector('.gallery')
-//   .firstElementChild.getBoundingClientRect();
-
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: 'smooth',
-// });
 
 function onLoadMore(e) {
   page += 1;
-  // loadMore.textContent = 'wait...';
   iElem.classList.remove('visually-hidden');
   getUser(valueInput).then(data => {
+    if (!data.legth) {
+      loadMore.classList.add('visually-hidden');
+      const lastItem = document.createElement('h1');
+      lastItem.textContent = 'The end, enter a new search';
+      endElemDiv.append(lastItem);
+    }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(data));
     let gallery = new SimpleLightbox('.gallery a', {
       captionDelay: 250,
@@ -101,7 +96,6 @@ async function getUser(name) {
     const response = await axios.get(
       `https://pixabay.com/api/?key=${KEY_PIXABAY}&q=${name}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
     );
-    // console.log(response);
     if (response.data.totalHits === 0) {
       loadMore.classList.add('visually-hidden');
       Notiflix.Notify.failure(
@@ -110,7 +104,6 @@ async function getUser(name) {
     } else if (response.data.totalHits > 40) {
       loadMore.classList.remove('visually-hidden');
       iElem.classList.add('visually-hidden');
-      // loadMore.textContent = 'Load more';
       Notiflix.Notify.success(
         `Hooray! We found ${response.data.totalHits} images.`
       );
@@ -120,17 +113,8 @@ async function getUser(name) {
         `We found only ${response.data.totalHits} images.`
       );
     }
-
-    // console.log(response.data.totalHits > 40);
     return response.data.hits;
   } catch (error) {
     console.error(error);
   }
 }
-// window.addEventListener('scroll', scroll);
-// function scroll(e) {
-//   console.log(e);
-//   // window.scrollTo({
-//   //   behavior: 'smooth',
-//   // });
-// }
