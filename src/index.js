@@ -25,6 +25,7 @@ function onSearch(e) {
   valueInput = document.querySelector("[type='text']").value;
   if (valueInput === '') {
     elemDiv.innerHTML = '';
+    // endElemDiv.innerHTML = '';
     loadMore.classList.add('visually-hidden');
     Notiflix.Notify.info('Please enter a search images');
     return;
@@ -79,11 +80,12 @@ function onLoadMore(e) {
   page += 1;
   iElem.classList.remove('visually-hidden');
   getUser(valueInput).then(data => {
-    if (!data.legth) {
+    console.log(data.length);
+    if (data.length < 40) {
       loadMore.classList.add('visually-hidden');
-      const lastItem = document.createElement('h1');
-      lastItem.textContent = 'The end, enter a new search';
-      endElemDiv.append(lastItem);
+      //   const lastItem = document.createElement('h1');
+      //   lastItem.textContent = 'The end, enter a new search';
+      //   endElemDiv.append(lastItem);
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(data));
     let gallery = new SimpleLightbox('.gallery a', {
