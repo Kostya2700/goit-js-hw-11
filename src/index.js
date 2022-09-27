@@ -14,6 +14,8 @@ let gallery = new SimpleLightbox('.photo-card a', {
 });
 let page;
 let valueInput = '';
+let allPictures = 0;
+let hitsPictures = 0;
 
 formElem.addEventListener('submit', onSearch);
 loadMore.addEventListener('click', onLoadMore);
@@ -50,12 +52,14 @@ function onSearch(e) {
     } else if (hits.length < 40) {
       loadMore.classList.add('visually-hidden');
       const end = document.createElement('h1');
-      end.textContent = 'End images';
+      end.textContent = 'End of images, please enter new search';
       divEndpic.append(end);
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
     gallery.refresh();
+    allPictures = hits.length;
+    return allPictures;
   });
 }
 
@@ -63,12 +67,18 @@ function onLoadMore() {
   page += 1;
   iElem.classList.remove('visually-hidden');
   loadMore.disabled = true;
-  // let allPictures = 0;
-  getUser(valueInput, page).then(({ hits, totalHits }) => {
-    // const allTotal = totalHits;
-    // allPictures = allTotal - hits.length;
-    // console.log('getUser ~ allPictures', allPictures);
+  // allPictures += hits.length;
 
+  // if (currentHits === response.totalHits) {
+  //   console.log(ok);
+  // }
+  //
+
+  getUser(valueInput, page).then(({ hits, totalHits }) => {
+    allPictures = allPictures + hits.length;
+    if (totalHits === allPictures) {
+      loadMore.classList.add('visually-hidden');
+    }
     if (hits.length >= 40) {
       iElem.classList.add('visually-hidden');
       loadMore.disabled = false;
@@ -76,10 +86,16 @@ function onLoadMore() {
       loadMore.classList.add('visually-hidden');
       loadMore.disabled = false;
       const end = document.createElement('h1');
-      end.textContent = 'End images';
+      end.textContent = 'End of images, please enter new search';
       divEndpic.append(end);
+      // Notiflix.Notify.warning(
+      //   "We're sorry, but you've reached the end of search results."
+      // );
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
     gallery.refresh();
+
+    return allPictures;
   });
+  // console.log(hitsPictures);
 }

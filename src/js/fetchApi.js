@@ -6,9 +6,6 @@ export default async function getUser(name, page) {
     const response = await axios.get(
       `https://pixabay.com/api/?key=${KEY_PIXABAY}&q=${name}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
     );
-    console.log(response);
-    console.log(response.data);
-    console.log(response.data.hits);
     return response.data;
   } catch (error) {
     console.error(error);
