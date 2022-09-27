@@ -27,7 +27,7 @@ function onSearch(e) {
     behavior: 'smooth',
   });
   page = 1;
-  valueInput = document.querySelector("[type='text']").value;
+  valueInput = document.querySelector("[type='text']").value.trim();
   if (valueInput === '') {
     elemDiv.innerHTML = '';
     loadMore.classList.add('visually-hidden');
