@@ -8,6 +8,7 @@ const formElem = document.querySelector('.search-form');
 const elemDiv = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more');
 const iElem = document.querySelector('.fa');
+const divEndpic = document.querySelector('.endpic');
 let gallery = new SimpleLightbox('.photo-card a', {
   captionDelay: 250,
 });
@@ -19,6 +20,7 @@ loadMore.addEventListener('click', onLoadMore);
 
 function onSearch(e) {
   e.preventDefault();
+  divEndpic.innerHTML = '';
   window.scrollTo({
     top: 0,
     left: 0,
@@ -47,6 +49,9 @@ function onSearch(e) {
       iElem.classList.add('visually-hidden');
     } else if (hits.length < 40) {
       loadMore.classList.add('visually-hidden');
+      const end = document.createElement('h1');
+      end.textContent = 'End images';
+      divEndpic.append(end);
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
@@ -60,7 +65,8 @@ function onLoadMore() {
   loadMore.disabled = true;
   // let allPictures = 0;
   getUser(valueInput, page).then(({ hits, totalHits }) => {
-    // allPictures = totalHits - hits.length;
+    // const allTotal = totalHits;
+    // allPictures = allTotal - hits.length;
     // console.log('getUser ~ allPictures', allPictures);
 
     if (hits.length >= 40) {
@@ -69,6 +75,9 @@ function onLoadMore() {
     } else if (hits.length < 40) {
       loadMore.classList.add('visually-hidden');
       loadMore.disabled = false;
+      const end = document.createElement('h1');
+      end.textContent = 'End images';
+      divEndpic.append(end);
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
     gallery.refresh();

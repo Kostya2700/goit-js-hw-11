@@ -126,3 +126,11 @@ font-size: 15px;
 button, img {
     cursor: pointer;
 }
+.endpic{
+  display: flex;
+  justify-content: space-around;
+}
+/* h1{
+  margin-left: auto;
+  margin-right: auto;
+} */
