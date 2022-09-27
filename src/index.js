@@ -42,7 +42,7 @@ function onSearch(e) {
     } else if (hits.length >= 40) {
       loadMore.classList.remove('visually-hidden');
       Notiflix.Notify.success(
-        `Hooray! We found ${totalHits} images at this page ${hits.length}`
+        `Hooray! We found ${totalHits} images at this page ${hits.length} images`
       );
       iElem.classList.add('visually-hidden');
     } else if (hits.length < 40) {
@@ -57,11 +57,18 @@ function onSearch(e) {
 function onLoadMore() {
   page += 1;
   iElem.classList.remove('visually-hidden');
+  loadMore.disabled = true;
+  // let allPictures = 0;
   getUser(valueInput, page).then(({ hits, totalHits }) => {
-    if (hits.length === 40) {
+    // allPictures = totalHits - hits.length;
+    // console.log('getUser ~ allPictures', allPictures);
+
+    if (hits.length >= 40) {
       iElem.classList.add('visually-hidden');
+      loadMore.disabled = false;
     } else if (hits.length < 40) {
       loadMore.classList.add('visually-hidden');
+      loadMore.disabled = false;
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
     gallery.refresh();
