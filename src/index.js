@@ -76,7 +76,7 @@ function onLoadMore() {
       loadMore.classList.add('visually-hidden');
       loadMore.disabled = false;
       const end = document.createElement('h1');
-      end.textContent = 'End images';
+      end.textContent = 'End of images, please enter new search';
       divEndpic.append(end);
     }
     elemDiv.insertAdjacentHTML('beforeend', markupPictures(hits));
