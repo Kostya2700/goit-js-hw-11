@@ -123,6 +123,6 @@ font-size: 15px;
     margin-left: 0;
     margin-right: -15px;
 }
-button{
+button, img {
     cursor: pointer;
 }
