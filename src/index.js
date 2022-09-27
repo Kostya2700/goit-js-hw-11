@@ -67,22 +67,18 @@ function onLoadMore() {
   page += 1;
   iElem.classList.remove('visually-hidden');
   loadMore.disabled = true;
-  // allPictures += hits.length;
-
-  // if (currentHits === response.totalHits) {
-  //   console.log(ok);
-  // }
-  //
 
   getUser(valueInput, page).then(({ hits, totalHits }) => {
     allPictures = allPictures + hits.length;
-    if (totalHits === allPictures) {
-      loadMore.classList.add('visually-hidden');
-    }
+    // console.log(allPictures);
+    // console.log(totalHits);
+    // console.log(hits.length);
+
     if (hits.length >= 40) {
       iElem.classList.add('visually-hidden');
       loadMore.disabled = false;
-    } else if (hits.length < 40) {
+    }
+    if (hits.length < 40 || totalHits === allPictures) {
       loadMore.classList.add('visually-hidden');
       loadMore.disabled = false;
       const end = document.createElement('h1');
